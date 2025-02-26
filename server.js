@@ -51,11 +51,18 @@ app.use("*all", async (req, res) => {
       render = (await import("./dist/server/entry-server.js")).render;
     }
 
-    const rendered = await render(url);
+    // fetch data
+    const data = "hello";
+
+    const rendered = await render(url, data);
 
     const html = template
       .replace(`<!--app-head-->`, rendered.head ?? "")
-      .replace(`<!--app-html-->`, rendered.html ?? "");
+      .replace(`<!--app-html-->`, rendered.html ?? "")
+      .replace(
+        `<!--app-data-->`,
+        `window.__HYDRATION_DATA__ = ${JSON.stringify(data)};`,
+      );
 
     res.status(200).set({ "Content-Type": "text/html" }).send(html);
   } catch (e) {

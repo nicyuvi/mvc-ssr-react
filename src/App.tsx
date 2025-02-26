@@ -1,12 +1,18 @@
-import './App.css'
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import "./App.css";
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import { ServerSideProps } from "./types";
 
-function App() {
-  const [count, setCount] = useState(0)
+function App({ serverSideProps }: { serverSideProps: unknown }) {
+  const [count, setCount] = useState(0);
+  console.log("ssrprops: ", serverSideProps);
 
   return (
     <>
+      {/* <div> */}
+      {/*   <p>server side props:</p> */}
+      {/*   <div>{user?.name}</div> */}
+      {/* </div> */}
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src="/vite.svg" className="logo" alt="Vite logo" />
@@ -28,7 +34,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
