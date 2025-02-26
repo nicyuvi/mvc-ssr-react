@@ -4,7 +4,6 @@ import App from "./App";
 // import { ServerSideProps } from "./types";
 
 export function render(_url: string, serverSideProps: unknown) {
-  // console.log("entry server", serverSideProps);
   const html = renderToString(
     <StrictMode>
       <App serverSideProps={serverSideProps} />

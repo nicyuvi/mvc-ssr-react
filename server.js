@@ -52,7 +52,7 @@ app.use("*all", async (req, res) => {
     }
 
     // fetch data
-    const data = "hello";
+    const data = { user: { id: "foo", name: "bar" } };
 
     const rendered = await render(url, data);
 

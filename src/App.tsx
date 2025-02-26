@@ -3,16 +3,17 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import { ServerSideProps } from "./types";
 
-function App({ serverSideProps }: { serverSideProps: unknown }) {
+function App({ serverSideProps }: { serverSideProps: ServerSideProps }) {
   const [count, setCount] = useState(0);
-  console.log("ssrprops: ", serverSideProps);
+  const { user } = serverSideProps;
 
   return (
     <>
-      {/* <div> */}
-      {/*   <p>server side props:</p> */}
-      {/*   <div>{user?.name}</div> */}
-      {/* </div> */}
+      <div>
+        <p>server side props:</p>
+        <div>{user?.id}</div>
+        <div>{user?.name}</div>
+      </div>
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src="/vite.svg" className="logo" alt="Vite logo" />
