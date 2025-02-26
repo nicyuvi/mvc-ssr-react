@@ -21,7 +21,8 @@
     "noUncheckedSideEffectImports": true
   },
   "include": [
-    "vite.config.ts" // we need this bc we're running vite build --ssr (running react on server)
-  ] // "src/**/*.ts", Include all TypeScript files in src/
-  // exclude src/views -- we need dom lib in ts config for views
+    "vite.config.ts", //  vite runs in node.js during `vite build --ssr`
+    "src/services",
+    "src/utils"
+  ]
 }
