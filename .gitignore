@@ -1,24 +1,53 @@
+# Node.js dependencies
+/node_modules/
+
+# Build output
+/dist/
+/build/
+/out/
+
 # Logs
-logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Operating system files
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE/editor files
+.vscode/
+.idea/
+/*.sublime-workspace
+/*.sublime-project
+
+# Testing
+/coverage/
+
+# TypeScript declaration files
+*.d.ts
+
+# OS generated files
+*.swp
+*.swo
+
+# Dependency directories for Yarn (if using Yarn)
+.pnp/
+.pnp.js
+
+# JetBrains specific files
+.idea/
+
+# Misc
+*.tmp
+*.bak
+*.swp
+*.sublime-workspace
+*.sublime-project
+

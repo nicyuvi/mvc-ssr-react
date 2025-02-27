@@ -1,7 +1,7 @@
-import "./App.css";
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { ServerSideProps } from "../types";
+import './App.css';
+import { useState } from 'react';
+import reactLogo from './assets/react.svg';
+import { ServerSideProps } from '../types';
 
 function App({ serverSideProps }: { serverSideProps: ServerSideProps }) {
   const [count, setCount] = useState(0);

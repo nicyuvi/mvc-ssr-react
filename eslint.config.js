@@ -1,18 +1,20 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
+import pluginJs from '@eslint/js';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import pluginReact from 'eslint-plugin-react';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-  { files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"] },
+  { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
   { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
+  eslintConfigPrettier,
   {
     rules: {
-      "react/react-in-jsx-scope": "off", // 👈 Disable the rule
+      'react/react-in-jsx-scope': 'off',
     },
   },
 ];

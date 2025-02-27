@@ -1,0 +1,35 @@
+# Node modules
+/node_modules/
+
+# Build output directories
+/dist/
+/build/
+/out/
+
+# Log files
+*.log
+
+# Dependency directories
+/.pnp/
+/.pnp.js
+
+# Temporary files
+*.tmp
+*.swp
+
+# IDE/Editor specific files
+.vscode/
+/.idea/
+/*.sublime-workspace
+/*.sublime-project
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Test coverage directories
+/coverage/
+
+# TypeScript type declaration files (if you don't want to format generated d.ts files)
+*.d.ts
+
