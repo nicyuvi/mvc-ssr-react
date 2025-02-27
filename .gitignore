@@ -21,6 +21,9 @@ Thumbs.db
 .env.local
 .env.*.local
 
+# Cache
+.eslintcache
+
 # IDE/editor files
 .vscode/
 .idea/
