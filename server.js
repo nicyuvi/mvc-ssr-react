@@ -54,7 +54,7 @@ app.use("*all", async (req, res) => {
     // fetch data
     const data = { user: { id: "foo", name: "bar" } };
 
-    const rendered = await render(url, data);
+    const rendered = render(url, data);
 
     const html = template
       .replace(`<!--app-head-->`, rendered.head ?? "")
