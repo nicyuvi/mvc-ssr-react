@@ -1,13 +1,16 @@
-import { StrictMode } from "react";
-import { renderToString } from "react-dom/server";
-import App from "./App";
-import { ServerSideProps } from "../types"; //TODO: make relative imports for types in tsconfig
+import { StrictMode } from 'react';
+import { renderToString } from 'react-dom/server';
+import { StaticRouter } from 'react-router-dom';
+import { ServerSideProps } from '../types'; //TODO: make relative imports for types in tsconfig
+import App from './App';
 
-export function render(_url: string, serverSideProps: ServerSideProps) {
+export function render(url: string, serverSideProps: ServerSideProps) {
   const html = renderToString(
     <StrictMode>
-      <App serverSideProps={serverSideProps} />
-    </StrictMode>,
+      <StaticRouter location={url}>
+        <App serverSideProps={serverSideProps} />
+      </StaticRouter>
+    </StrictMode>
   );
   return { html };
 }

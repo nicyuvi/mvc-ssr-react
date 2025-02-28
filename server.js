@@ -1,15 +1,15 @@
-import fs from "node:fs/promises";
-import express from "express";
+import fs from 'node:fs/promises';
+import express from 'express';
 
 // Constants
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = process.env.NODE_ENV === 'production';
 const port = process.env.PORT || 5173;
-const base = process.env.BASE || "/";
+const base = process.env.BASE || '/';
 
 // Cached production assets
 const templateHtml = isProduction
-  ? await fs.readFile("./dist/client/index.html", "utf-8")
-  : "";
+  ? await fs.readFile('./dist/client/index.html', 'utf-8')
+  : '';
 
 // Create http server
 const app = express();
@@ -18,24 +18,25 @@ const app = express();
 /** @type {import('vite').ViteDevServer | undefined} */
 let vite;
 if (!isProduction) {
-  const { createServer } = await import("vite");
+  const { createServer } = await import('vite');
   vite = await createServer({
     server: { middlewareMode: true },
-    appType: "custom",
+    appType: 'custom',
     base,
   });
   app.use(vite.middlewares);
 } else {
-  const compression = (await import("compression")).default;
-  const sirv = (await import("sirv")).default;
+  const compression = (await import('compression')).default;
+  const sirv = (await import('sirv')).default;
   app.use(compression());
-  app.use(base, sirv("./dist/client", { extensions: [] }));
+  app.use(base, sirv('./dist/client', { extensions: [] }));
 }
 
 // Serve HTML
-app.use("*all", async (req, res) => {
+app.use('*all', async (req, res) => {
   try {
-    const url = req.originalUrl.replace(base, "");
+    const url =
+      base === '/' ? req.originalUrl : req.originalUrl.replace(base, '');
 
     /** @type {string} */
     let template;
@@ -43,28 +44,28 @@ app.use("*all", async (req, res) => {
     let render;
     if (!isProduction) {
       // Always read fresh template in development
-      template = await fs.readFile("./index.html", "utf-8");
+      template = await fs.readFile('./index.html', 'utf-8');
       template = await vite.transformIndexHtml(url, template);
-      render = (await vite.ssrLoadModule("/src/views/entry-server.tsx")).render;
+      render = (await vite.ssrLoadModule('/src/views/entry-server.tsx')).render;
     } else {
       template = templateHtml;
-      render = (await import("./dist/server/entry-server.js")).render;
+      render = (await import('./dist/server/entry-server.js')).render;
     }
 
     // fetch data
-    const data = { user: { id: "foo", name: "bar" } };
+    const data = { user: { id: 'foo', name: 'bar' } };
 
     const rendered = render(url, data);
 
     const html = template
-      .replace(`<!--app-head-->`, rendered.head ?? "")
-      .replace(`<!--app-html-->`, rendered.html ?? "")
+      .replace(`<!--app-head-->`, rendered.head ?? '')
+      .replace(`<!--app-html-->`, rendered.html ?? '')
       .replace(
         `<!--app-data-->`,
-        `window.__HYDRATION_DATA__ = ${JSON.stringify(data)};`,
+        `window.__HYDRATION_DATA__ = ${JSON.stringify(data)};`
       );
 
-    res.status(200).set({ "Content-Type": "text/html" }).send(html);
+    res.status(200).set({ 'Content-Type': 'text/html' }).send(html);
   } catch (e) {
     vite?.ssrFixStacktrace(e);
     console.log(e.stack);
