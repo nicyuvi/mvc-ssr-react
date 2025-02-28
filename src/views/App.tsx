@@ -18,7 +18,6 @@ const About = () => <div>About Page</div>;
 
 function App({ serverSideProps }: { serverSideProps: ServerSideProps }) {
   const { user } = serverSideProps;
-  console.log(user);
 
   return (
     <Switch>
