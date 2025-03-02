@@ -1,6 +1,5 @@
 import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import { ServerSideProps, StaticContext } from '../types';
-import './App.css';
 
 interface HomeProps {
   user: { id: string; name: string } | undefined;
