@@ -6,13 +6,13 @@ interface HomeProps {
 }
 
 const Home = ({ user }: HomeProps) => (
-  <>
-    <h1 className="text-red-500">Home Page</h1>
+  <div>
+    <h1 className="mt-2 mb-4 text-red-500">Home Page</h1>
     <p>server side props: </p>
     <p>{user?.id}</p>
     <p>{user?.name}</p>
     <Link to="/about">About</Link>
-  </>
+  </div>
 );
 
 const About = () => {
