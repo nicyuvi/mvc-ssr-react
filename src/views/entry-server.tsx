@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
-import { ServerSideProps } from '../types'; //TODO: make relative imports for types in tsconfig
+import { ServerSideProps } from '@types';
 import App from './App';
 
 export function render(url: string, serverSideProps: ServerSideProps) {
