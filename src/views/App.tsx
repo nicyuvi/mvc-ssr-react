@@ -1,6 +1,12 @@
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import { ServerSideProps } from '../types';
 import './App.css';
+
+// TODO: put in types
+interface StaticContext {
+  url: string;
+  status: number;
+}
 
 interface HomeProps {
   user: { id: string; name: string } | undefined;
@@ -12,8 +18,10 @@ const Home = ({ user }: HomeProps) => (
     <p>server side props: </p>
     <p>{user?.id}</p>
     <p>{user?.name}</p>
+    <Link to="/about">About</Link>
   </>
 );
+
 const About = () => {
   return <div>About Page</div>;
 };
@@ -28,6 +36,19 @@ const RedirectPage = () => {
   return <div>Redirect Page</div>;
 };
 
+interface NotFoundProps {
+  staticContext: StaticContext;
+}
+
+const NotFound = ({ staticContext }: NotFoundProps) => {
+  if (staticContext) staticContext.status = 404;
+  return (
+    <div>
+      <h1>Sorry, can’t find that.</h1>
+    </div>
+  );
+};
+
 function App({ serverSideProps }: { serverSideProps: ServerSideProps }) {
   const { user } = serverSideProps;
 
@@ -36,6 +57,7 @@ function App({ serverSideProps }: { serverSideProps: ServerSideProps }) {
       <Route exact path="/" render={() => <Home user={user} />} />
       <Route exact path="/about" component={About} />
       <Route exact path="/redirect-test" component={RedirectPage} />
+      <Route component={NotFound} />
     </Switch>
   );
 }

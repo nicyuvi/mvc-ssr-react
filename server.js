@@ -69,7 +69,10 @@ app.use('*all', async (req, res) => {
           `window.__HYDRATION_DATA__ = ${JSON.stringify(data)};`
         );
 
-      res.status(200).set({ 'Content-Type': 'text/html' }).send(html);
+      res
+        .status(context.status || 200)
+        .set({ 'Content-Type': 'text/html' })
+        .send(html);
     }
   } catch (e) {
     vite?.ssrFixStacktrace(e);
