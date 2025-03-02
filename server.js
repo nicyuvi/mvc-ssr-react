@@ -55,11 +55,13 @@ app.use('*all', async (req, res) => {
     // fetch data
     const data = { user: { id: 'foo', name: 'bar' } };
 
-    const rendered = render(url, data);
+    const { appHTML, context } = render(url, data);
+    console.log(context);
+    console.log(appHTML);
 
     const html = template
-      .replace(`<!--app-head-->`, rendered.head ?? '')
-      .replace(`<!--app-html-->`, rendered.html ?? '')
+      // .replace(`<!--app-head-->`, rendered.head ?? '')
+      .replace(`<!--app-html-->`, appHTML ?? '')
       .replace(
         `<!--app-data-->`,
         `window.__HYDRATION_DATA__ = ${JSON.stringify(data)};`

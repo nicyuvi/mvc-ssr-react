@@ -5,12 +5,14 @@ import { ServerSideProps } from '../types'; //TODO: make relative imports for ty
 import App from './App';
 
 export function render(url: string, serverSideProps: ServerSideProps) {
-  const html = renderToString(
+  const context = {};
+  const appHTML = renderToString(
     <StrictMode>
-      <StaticRouter location={url}>
+      <StaticRouter location={url} context={context}>
         <App serverSideProps={serverSideProps} />
       </StaticRouter>
     </StrictMode>
   );
-  return { html };
+
+  return { appHTML, context };
 }

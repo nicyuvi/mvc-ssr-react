@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { ServerSideProps } from '../types';
 import './App.css';
 
@@ -14,7 +14,19 @@ const Home = ({ user }: HomeProps) => (
     <p>{user?.name}</p>
   </>
 );
-const About = () => <div>About Page</div>;
+const About = () => {
+  return <div>About Page</div>;
+};
+
+const RedirectPage = () => {
+  const shouldRedirect = true; // Add your redirect condition here
+
+  if (shouldRedirect) {
+    return <Redirect to="/about" />;
+  }
+
+  return <div>Redirect Page</div>;
+};
 
 function App({ serverSideProps }: { serverSideProps: ServerSideProps }) {
   const { user } = serverSideProps;
@@ -23,6 +35,7 @@ function App({ serverSideProps }: { serverSideProps: ServerSideProps }) {
     <Switch>
       <Route exact path="/" render={() => <Home user={user} />} />
       <Route exact path="/about" component={About} />
+      <Route exact path="/redirect-test" component={RedirectPage} />
     </Switch>
   );
 }
