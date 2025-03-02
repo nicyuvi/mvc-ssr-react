@@ -56,18 +56,21 @@ app.use('*all', async (req, res) => {
     const data = { user: { id: 'foo', name: 'bar' } };
 
     const { appHTML, context } = render(url, data);
-    console.log(context);
-    console.log(appHTML);
 
-    const html = template
-      // .replace(`<!--app-head-->`, rendered.head ?? '')
-      .replace(`<!--app-html-->`, appHTML ?? '')
-      .replace(
-        `<!--app-data-->`,
-        `window.__HYDRATION_DATA__ = ${JSON.stringify(data)};`
-      );
+    if (context.url) {
+      // Somewhere a `<Redirect>` was rendered
+      res.redirect(301, context.url);
+    } else {
+      const html = template
+        // .replace(`<!--app-head-->`, rendered.head ?? '')
+        .replace(`<!--app-html-->`, appHTML ?? '')
+        .replace(
+          `<!--app-data-->`,
+          `window.__HYDRATION_DATA__ = ${JSON.stringify(data)};`
+        );
 
-    res.status(200).set({ 'Content-Type': 'text/html' }).send(html);
+      res.status(200).set({ 'Content-Type': 'text/html' }).send(html);
+    }
   } catch (e) {
     vite?.ssrFixStacktrace(e);
     console.log(e.stack);
