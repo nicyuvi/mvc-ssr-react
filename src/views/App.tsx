@@ -7,7 +7,7 @@ interface HomeProps {
 
 const Home = ({ user }: HomeProps) => (
   <>
-    <h1>Home Page</h1>
+    <h1 className="text-red-500">Home Page</h1>
     <p>server side props: </p>
     <p>{user?.id}</p>
     <p>{user?.name}</p>
