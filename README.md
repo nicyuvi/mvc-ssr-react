@@ -1,8 +1,10 @@
 ## Features
 
 - Vite + SWC for fast builds
-- SSR
+- SSR + Hydration
 - React + React Router
+- Production builds with optimized assets
+- Development mode with HMR using Vite Dev Server
 
 ## Installation
 

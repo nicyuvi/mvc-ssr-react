@@ -7,7 +7,7 @@ const port = process.env.PORT || 5173;
 const base = process.env.BASE || '/';
 
 // Cached production assets
-const templateHtml = isProduction
+const templateProd = isProduction
   ? await fs.readFile('./dist/client/index.html', 'utf-8')
   : '';
 
@@ -46,9 +46,10 @@ app.use('*all', async (req, res) => {
       // Always read fresh template in development
       template = await fs.readFile('./index.html', 'utf-8');
       template = await vite.transformIndexHtml(url, template);
+      // Always fresh render since we are changing modules during development
       render = (await vite.ssrLoadModule('/src/views/entry-server.tsx')).render;
     } else {
-      template = templateHtml;
+      template = templateProd;
       render = (await import('./dist/server/entry-server.js')).render;
     }
 
@@ -62,7 +63,6 @@ app.use('*all', async (req, res) => {
       res.redirect(301, context.url);
     } else {
       const html = template
-        // .replace(`<!--app-head-->`, rendered.head ?? '')
         .replace(`<!--app-html-->`, appHTML ?? '')
         .replace(
           `<!--app-data-->`,
