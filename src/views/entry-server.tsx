@@ -4,7 +4,10 @@ import { StaticRouter } from 'react-router-dom';
 import { ServerSideProps } from '@types';
 import App from './App';
 
-export function render(url: string, serverSideProps: ServerSideProps) {
+export function render(
+  url: string,
+  serverSideProps: ServerSideProps
+): { appHTML: string; context: object } {
   const context = {};
   const appHTML = renderToString(
     <StrictMode>

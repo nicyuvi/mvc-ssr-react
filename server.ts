@@ -16,7 +16,7 @@ const app = express();
 
 // Add Vite or respective production middlewares
 /** @type {import('vite').ViteDevServer | undefined} */
-let vite;
+let vite: import('vite').ViteDevServer | undefined;
 if (!isProduction) {
   const { createServer } = await import('vite');
   vite = await createServer({
@@ -32,17 +32,28 @@ if (!isProduction) {
   app.use(base, sirv('./dist/client', { extensions: [] }));
 }
 
+// routes -- tsc doesn't include .js so we explicitly call it
+// TODO: consider using esbuild instead of tsc so we can just call /post.routes
+// and esbuild will include .js extension for me
+import postRouter from './src/services/post/post.routes.js';
+
+app.use('/post', postRouter);
+
 // Serve HTML
 app.use('*all', async (req, res) => {
   try {
+    console.log('frontend');
     const url =
       base === '/' ? req.originalUrl : req.originalUrl.replace(base, '');
 
     /** @type {string} */
-    let template;
+    let template: string | undefined;
     /** @type {import('./src/views/entry-server.ts').render} */
-    let render;
-    if (!isProduction) {
+    let render: (
+      url: string,
+      data: object
+    ) => { appHTML: string; context: { url: string; status: number } };
+    if (!isProduction && vite) {
       // Always read fresh template in development
       template = await fs.readFile('./index.html', 'utf-8');
       template = await vite.transformIndexHtml(url, template);
@@ -50,7 +61,8 @@ app.use('*all', async (req, res) => {
       render = (await vite.ssrLoadModule('/src/views/entry-server.tsx')).render;
     } else {
       template = templateProd;
-      render = (await import('./dist/server/entry-server.js')).render;
+      // @ts-expect-error module doesn't exists until build
+      render = (await import('./entry-server/entry-server.js')).render;
     }
 
     // fetch data
@@ -63,7 +75,7 @@ app.use('*all', async (req, res) => {
       res.redirect(301, context.url);
     } else {
       const html = template
-        .replace(`<!--app-html-->`, appHTML ?? '')
+        ?.replace(`<!--app-html-->`, appHTML ?? '')
         .replace(
           `<!--app-data-->`,
           `window.__HYDRATION_DATA__ = ${JSON.stringify(data)};`
@@ -74,10 +86,12 @@ app.use('*all', async (req, res) => {
         .set({ 'Content-Type': 'text/html' })
         .send(html);
     }
-  } catch (e) {
-    vite?.ssrFixStacktrace(e);
-    console.log(e.stack);
-    res.status(500).end(e.stack);
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      vite?.ssrFixStacktrace(e);
+      console.log(e.stack);
+      res.status(500).end(e.stack);
+    }
   }
 });
 

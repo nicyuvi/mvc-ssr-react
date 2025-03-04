@@ -4,16 +4,18 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "nodemon server",
-    "build": "npm run build:client && npm run build:server",
+    "dev": "tsx watch --tsconfig ./tsconfig.node.json server.ts",
+    "build": "npm run build:client && npm run build:client-entry-server && npm run build:server",
     "build:client": "vite build --outDir dist/client",
-    "build:server": "vite build --ssr src/views/entry-server.tsx --outDir dist/server",
-    "preview": "cross-env NODE_ENV=production node server",
+    "build:client-entry-server": "vite build --ssr src/views/entry-server.tsx --outDir dist/entry-server",
+    "build:server": "tsc -p tsconfig.node.json",
+    "preview": "cross-env NODE_ENV=production node ./dist/server.js",
     "prepare": "husky"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
       "eslint --cache --max-warnings=0",
+      "bash -c tsc --noEmit",
       "prettier --write"
     ],
     "*.{json,css,md}": [
@@ -32,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@types/compression": "^1.7.5",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.0",
     "@types/react": "^18.3.12",
@@ -48,6 +51,7 @@
     "nodemon": "^3.1.9",
     "prettier": "3.5.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
+    "tsx": "^4.19.3",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.25.0",
     "vite": "^6.0.1"
