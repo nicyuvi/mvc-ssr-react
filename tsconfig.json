@@ -1,4 +1,5 @@
 {
+  // for ts frontend
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -8,9 +9,9 @@
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true, // vite specific
+    "noEmit": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noEmit": true,
     "jsx": "react-jsx",
     /* Linting */
     "strict": true,
@@ -27,6 +28,9 @@
   "references": [
     {
       "path": "./tsconfig.vite.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
     }
   ]
 }

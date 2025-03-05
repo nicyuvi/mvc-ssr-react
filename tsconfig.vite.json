@@ -1,4 +1,5 @@
 {
+  // for vite
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
@@ -8,7 +9,6 @@
     "skipLibCheck": true,
     /* Bundler mode */
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true, // vite specific
     "isolatedModules": true,
     "moduleDetection": "force",
     /* Linting */

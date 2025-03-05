@@ -1,16 +1,18 @@
 {
+  // for node backend
+  // try to use esbuild here so i can use path alias
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2022",
     "lib": ["ES2023"],
-    "module": "ESNext",
+    "module": "NodeNext",
     "skipLibCheck": true,
     "allowJs": true, // Allow JS files to be imported from TS and vice versa
     "outDir": "dist",
     "noEmitOnError": true,
     /* Bundler mode */
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     "allowImportingTsExtensions": false,
     "isolatedModules": true,
@@ -21,7 +23,15 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@lib/*": ["src/lib/*"],
+      "@constants": ["src/constants.ts"],
+      "@services/*": ["src/services/*"],
+      "@types": ["src/types.ts"]
+    }
   },
-  "include": ["server.ts", "src/services"]
+  "include": ["server.ts", "src"],
+  "exclude": ["src/views"]
 }

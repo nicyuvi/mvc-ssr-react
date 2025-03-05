@@ -1,5 +1,5 @@
 import { Link, Redirect, Route, Switch } from 'react-router-dom';
-import { ServerSideProps, StaticContext } from '../types';
+import { ServerSideProps, StaticContextType } from '@types';
 
 interface HomeProps {
   user: { id: string; name: string } | undefined;
@@ -30,7 +30,7 @@ const RedirectPage = () => {
 };
 
 interface NotFoundProps {
-  staticContext: StaticContext;
+  staticContext: StaticContextType;
 }
 
 const NotFound = ({ staticContext }: NotFoundProps) => {

@@ -1,71 +1,62 @@
 import fs from 'node:fs/promises';
 import express from 'express';
-
-// Constants
-const isProduction = process.env.NODE_ENV === 'production';
-const port = process.env.PORT || 5173;
-const base = process.env.BASE || '/';
+import { setupMiddlewares } from './src/lib/middlewares.js';
+import { getViteServer } from './src/lib/vite.js';
+import { IS_PRODUCTION, PORT, BASE_URL } from './src/constants.js';
+import { RenderFunctionType } from './src/types.js';
+import postRouter from './src/services/post/post.routes.js';
 
 // Cached production assets
-const templateProd = isProduction
+const templateProd: string = IS_PRODUCTION
   ? await fs.readFile('./dist/client/index.html', 'utf-8')
   : '';
 
 // Create http server
 const app = express();
 
-// Add Vite or respective production middlewares
-/** @type {import('vite').ViteDevServer | undefined} */
-let vite: import('vite').ViteDevServer | undefined;
-if (!isProduction) {
-  const { createServer } = await import('vite');
-  vite = await createServer({
-    server: { middlewareMode: true },
-    appType: 'custom',
-    base,
-  });
-  app.use(vite.middlewares);
-} else {
-  const compression = (await import('compression')).default;
-  const sirv = (await import('sirv')).default;
-  app.use(compression());
-  app.use(base, sirv('./dist/client', { extensions: [] }));
-}
+// Add Vite and production middlewares
+await setupMiddlewares(app, IS_PRODUCTION);
 
-// routes -- tsc doesn't include .js so we explicitly call it
-// TODO: consider using esbuild instead of tsc so we can just call /post.routes
-// and esbuild will include .js extension for me
-import postRouter from './src/services/post/post.routes.js';
-
+// routes
 app.use('/post', postRouter);
 
 // Serve HTML
 app.use('*all', async (req, res) => {
   try {
-    console.log('frontend');
     const url =
-      base === '/' ? req.originalUrl : req.originalUrl.replace(base, '');
+      BASE_URL === '/'
+        ? req.originalUrl
+        : req.originalUrl.replace(BASE_URL, '');
 
-    /** @type {string} */
-    let template: string | undefined;
-    /** @type {import('./src/views/entry-server.ts').render} */
-    let render: (
-      url: string,
-      data: object
-    ) => { appHTML: string; context: { url: string; status: number } };
-    if (!isProduction && vite) {
-      // Always read fresh template in development
-      template = await fs.readFile('./index.html', 'utf-8');
-      template = await vite.transformIndexHtml(url, template);
-      // Always fresh render since we are changing modules during development
-      render = (await vite.ssrLoadModule('/src/views/entry-server.tsx')).render;
+    let template: string | null = null;
+    let render: RenderFunctionType | null = null;
+
+    // todo: extract render logic
+    if (!IS_PRODUCTION) {
+      const vite = getViteServer();
+      if (vite) {
+        // Always read fresh template in development
+        template = await fs.readFile('./index.html', 'utf-8');
+        template = await vite.transformIndexHtml(url, template);
+        // Always fresh render since we are changing modules during development
+        render = (await vite.ssrLoadModule('/src/views/entry-server.tsx'))
+          .render;
+      }
     } else {
       template = templateProd;
       // @ts-expect-error module doesn't exists until build
       render = (await import('./entry-server/entry-server.js')).render;
     }
 
+    if (template === null) {
+      throw new Error('Template was not assigned');
+    }
+    if (render === null) {
+      throw new Error('Render function was not assigned');
+    }
+
     // fetch data
+    // todo: specify data shape
     const data = { user: { id: 'foo', name: 'bar' } };
 
     const { appHTML, context } = render(url, data);
@@ -88,6 +79,7 @@ app.use('*all', async (req, res) => {
     }
   } catch (e: unknown) {
     if (e instanceof Error) {
+      const vite = getViteServer();
       vite?.ssrFixStacktrace(e);
       console.log(e.stack);
       res.status(500).end(e.stack);
@@ -96,6 +88,6 @@ app.use('*all', async (req, res) => {
 });
 
 // Start http server
-app.listen(port, () => {
-  console.log(`Server started at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server started at http://localhost:${PORT}`);
 });

@@ -10,17 +10,8 @@
     "build:client-entry-server": "vite build --ssr src/views/entry-server.tsx --outDir dist/entry-server",
     "build:server": "tsc -p tsconfig.node.json",
     "preview": "cross-env NODE_ENV=production node ./dist/server.js",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json",
     "prepare": "husky"
-  },
-  "lint-staged": {
-    "*.{ts,tsx,js,jsx}": [
-      "eslint --cache --max-warnings=0",
-      "bash -c tsc --noEmit",
-      "prettier --write"
-    ],
-    "*.{json,css,md}": [
-      "prettier --write"
-    ]
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.9",
