@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch --tsconfig ./tsconfig.node.json server.ts",
-    "build": "npm run build:client && npm run build:client-entry-server && npm run build:server",
+    "build": "tsc --noEmit && npm run build:client && npm run build:client-entry-server && npm run build:server",
     "build:client": "vite build --outDir dist/client",
     "build:client-entry-server": "vite build --ssr src/views/entry-server.tsx --outDir dist/entry-server",
     "build:server": "tsc -p tsconfig.node.json",
