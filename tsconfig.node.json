@@ -10,12 +10,13 @@
     "module": "NodeNext", // enable esm
     /* Bundle */
     "outDir": "dist",
+    "moduleResolution": "NodeNext", // ts to resolve esm like node
     "noEmitOnError": true,
     "skipLibCheck": true,
     "allowJs": false,
-    "moduleResolution": "NodeNext", // ts to resolve esm like node
     "esModuleInterop": true, // enable esm and common js
     "allowSyntheticDefaultImports": true, // allow default import from common js
+    "useDefineForClassFields": true, // Use ECMAScript class field initialization
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
