@@ -1,5 +1,5 @@
 {
-  // for ts frontend
+  // for ts react frontend
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
