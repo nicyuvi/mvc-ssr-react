@@ -4,7 +4,7 @@ import { setupMiddlewares } from './src/lib/middlewares.js';
 import { getViteServer } from './src/lib/vite.js';
 import { IS_PRODUCTION, PORT, BASE_URL } from './src/constants.js';
 import { RenderFunctionType } from './src/types.js';
-import postRouter from './src/services/post/post.routes.js';
+import postsRouter from './src/domain/post/post.routes.js';
 
 // Cached production assets
 const templateProd: string = IS_PRODUCTION
@@ -18,8 +18,9 @@ const app = express();
 await setupMiddlewares(app, IS_PRODUCTION);
 
 // routes
-app.use('/post', postRouter);
+app.use('/posts', postsRouter);
 
+// TODO: separate logic into functions for readability
 // Serve HTML
 app.use('*all', async (req, res) => {
   try {
