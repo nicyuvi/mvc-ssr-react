@@ -2,6 +2,9 @@
   "name": "mvc-ssr-react",
   "private": true,
   "version": "0.0.0",
+  "engines": {
+    "node": "22.13.x"
+  },
   "type": "module",
   "scripts": {
     "dev": "tsx watch --tsconfig ./tsconfig.node.json server.ts",
