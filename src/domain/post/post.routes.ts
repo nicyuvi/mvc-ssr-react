@@ -21,7 +21,7 @@ const postsDir = path.join(__dirname, 'content');
 
 // GET all posts
 // TODO: trycatch for error handling
-postsRouter.get('/', (res: Response) => {
+postsRouter.get('/', (_req: Request, res: Response) => {
   fs.readdir(postsDir, (err, files) => {
     if (err) {
       console.error(err);
