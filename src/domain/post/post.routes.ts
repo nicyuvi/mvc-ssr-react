@@ -2,9 +2,8 @@ import { Request, Response, Router } from 'express';
 import { promises as fs } from 'fs';
 import matter from 'gray-matter';
 import path, { dirname } from 'path';
-import { remark } from 'remark';
-import html from 'remark-html';
 import { fileURLToPath } from 'url';
+import { markdownToHtml } from '../../utils/markdown.js';
 
 const postsRouter = Router();
 
@@ -38,13 +37,6 @@ postsRouter.get('/', (_req: Request, res: Response) => {
   }
   getAllPosts();
 });
-
-// Helper function to convert Markdown to HTML
-// TODO: move this to utils
-async function markdownToHtml(markdown: string): Promise<string> {
-  const result = await remark().use(html).process(markdown);
-  return result.toString();
-}
 
 postsRouter.get('/:slug', (req: Request, res: Response) => {
   const { slug } = req.params;
