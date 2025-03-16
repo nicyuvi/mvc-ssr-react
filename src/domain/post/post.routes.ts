@@ -15,7 +15,7 @@ const __dirname = dirname(__filename);
 const postsDir = path.join(__dirname, 'content');
 
 postsRouter.get('/', (_req: Request, res: Response) => {
-  (async () => {
+  async function getAllPosts() {
     try {
       const files = await fs.readdir(postsDir);
       const markdownFiles = files.filter((file) => file.endsWith('.md'));
@@ -35,7 +35,8 @@ postsRouter.get('/', (_req: Request, res: Response) => {
       console.error(err);
       res.status(500).send('Unable to read posts');
     }
-  })();
+  }
+  getAllPosts();
 });
 
 // Helper function to convert Markdown to HTML
@@ -47,7 +48,7 @@ async function markdownToHtml(markdown: string): Promise<string> {
 
 postsRouter.get('/:slug', (req: Request, res: Response) => {
   const { slug } = req.params;
-  (async () => {
+  async function getPostBySlug(slug: string) {
     try {
       const filePath = path.join(postsDir, `${slug}.md`);
       const data = await fs.readFile(filePath, 'utf-8');
@@ -58,7 +59,8 @@ postsRouter.get('/:slug', (req: Request, res: Response) => {
       console.error(error);
       res.status(500).send(`Unable to read post: ${slug}`);
     }
-  })();
+  }
+  getPostBySlug(slug);
 });
 
 export default postsRouter;
