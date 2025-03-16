@@ -4,7 +4,7 @@ import { setupMiddlewares } from './src/lib/middlewares.js';
 import { getViteServer } from './src/lib/vite.js';
 import { IS_PRODUCTION, PORT, BASE_URL } from './src/constants.js';
 import { RenderFunctionType } from './src/types.js';
-import postsRouter from './src/domain/post/post.routes.js';
+import postsRouter from './src/domain/posts/posts.routes.js';
 
 // Cached production assets
 const templateProd: string = IS_PRODUCTION
