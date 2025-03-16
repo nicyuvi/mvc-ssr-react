@@ -2,17 +2,13 @@ import { Request, Response, Router } from 'express';
 import fs from 'fs';
 import matter from 'gray-matter';
 import path, { dirname } from 'path';
+import { remark } from 'remark';
+import html from 'remark-html';
 import { fileURLToPath } from 'url';
 
 const postsRouter = Router();
 
-// Helper function to convert Markdown to HTML
-// async function markdownToHtml(markdown: unknown) {
-//   const result = await remark().use(html).process(markdown);
-//   return result.toString();
-// }
-
-// NOTE: ReferenceError: __dirname is not defined in ES module scope
+// NOTE: ReferenceError: __dirname is not defined in ES module scope. we derive it manually
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -21,6 +17,7 @@ const postsDir = path.join(__dirname, 'content');
 
 // GET all posts
 // TODO: trycatch for error handling
+// FIX: use fs.promises.readdir() with async await to ensure async readability
 postsRouter.get('/', (_req: Request, res: Response) => {
   fs.readdir(postsDir, (err, files) => {
     if (err) {
@@ -38,18 +35,34 @@ postsRouter.get('/', (_req: Request, res: Response) => {
           ...metadata,
         };
       });
-
-      console.log(posts);
-
-      res.send('Returning all posts');
+      res.json(posts);
     }
   });
 });
 
+// Helper function to convert Markdown to HTML
+// TODO: move this to utils
+async function markdownToHtml(markdown: string): Promise<string> {
+  const result = await remark().use(html).process(markdown);
+  return result.toString();
+}
+
 // GET a single post by ID
-postsRouter.get('/:id', (req: Request, res: Response) => {
-  const { id } = req.params; // Extract ID from request params
-  res.send(`Returning post ${id}`);
+postsRouter.get('/:slug', (req: Request, res: Response) => {
+  const { slug } = req.params;
+  // NOTE: No top-level await so we use an iife
+  (async () => {
+    try {
+      const filePath = path.join(postsDir, `${slug}.md`);
+      const data = await fs.promises.readFile(filePath, 'utf-8');
+      const { data: metadata, content: markdown } = matter(data);
+      const html = await markdownToHtml(markdown);
+      res.json({ ...metadata, html });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send(`Unable to read post: ${slug}`);
+    }
+  })();
 });
 
 export default postsRouter;
