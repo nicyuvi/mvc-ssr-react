@@ -16,3 +16,16 @@ export type RenderFunctionType = (
   appHTML: string;
   context: StaticContextType;
 };
+
+export interface PostMetaData {
+  slug?: string;
+  title: string;
+  author: string;
+  date: string;
+  tags: string[];
+  summary: string;
+}
+
+export interface Post extends PostMetaData {
+  html: string;
+}
