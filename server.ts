@@ -64,16 +64,24 @@ app.use('*all', async (req, res) => {
     // todo: specify data shape
     const data = { user: { id: 'foo', name: 'bar' } };
 
-    const { appHTML } = render(url, data);
+    try {
+      const { appHTML } = render(url, data);
 
-    const html = template
-      ?.replace(`<!--app-html-->`, appHTML ?? '')
-      .replace(
-        `<!--app-data-->`,
-        `window.__HYDRATION_DATA__ = ${JSON.stringify(data)};`
-      );
+      const html = template
+        ?.replace(`<!--app-html-->`, appHTML ?? '')
+        .replace(
+          `<!--app-data-->`,
+          `window.__HYDRATION_DATA__ = ${JSON.stringify(data)};`
+        );
 
-    res.status(200).set({ 'Content-Type': 'text/html' }).send(html);
+      res.status(200).set({ 'Content-Type': 'text/html' }).send(html);
+    } catch (error) {
+      if (error instanceof Response && error.status === 301) {
+        res.redirect(301, error.headers.get('Location') || '/');
+      } else {
+        res.status(500).send('Internal Server Error');
+      }
+    }
   } catch (e: unknown) {
     if (e instanceof Error) {
       const vite = getViteServer();

@@ -20,7 +20,7 @@ const About = () => {
 };
 
 const RedirectPage = () => {
-  return <div>Redirect Page</div>;
+  throw new Response('', { status: 301, headers: { Location: '/about' } });
 };
 
 const NotFound = () => {
@@ -38,7 +38,7 @@ function App({ serverSideProps }: { serverSideProps: ServerSideProps }) {
     <Routes>
       <Route path="/" element={<Home user={user} />} />
       <Route path="/about" element={<About />} />
-      <Route path="/redirect-test" element={<RedirectPage />} />
+      <Route path="/moved-permanently" element={<RedirectPage />} />
       {/* Catch-all route for 404 pages */}
       <Route path="*" element={<NotFound />} />
     </Routes>
