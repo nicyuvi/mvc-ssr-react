@@ -1,21 +1,20 @@
 import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { ServerSideProps } from '@types';
 import App from './App';
 
 export function render(
   url: string,
   serverSideProps: ServerSideProps
-): { appHTML: string; context: object } {
-  const context = {};
+): { appHTML: string } {
   const appHTML = renderToString(
     <StrictMode>
-      <StaticRouter location={url} context={context}>
+      <StaticRouter location={url}>
         <App serverSideProps={serverSideProps} />
       </StaticRouter>
     </StrictMode>
   );
 
-  return { appHTML, context };
+  return { appHTML };
 }

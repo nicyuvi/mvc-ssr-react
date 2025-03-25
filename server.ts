@@ -64,24 +64,16 @@ app.use('*all', async (req, res) => {
     // todo: specify data shape
     const data = { user: { id: 'foo', name: 'bar' } };
 
-    const { appHTML, context } = render(url, data);
+    const { appHTML } = render(url, data);
 
-    if (context.url) {
-      // Somewhere a `<Redirect>` was rendered
-      res.redirect(301, context.url);
-    } else {
-      const html = template
-        ?.replace(`<!--app-html-->`, appHTML ?? '')
-        .replace(
-          `<!--app-data-->`,
-          `window.__HYDRATION_DATA__ = ${JSON.stringify(data)};`
-        );
+    const html = template
+      ?.replace(`<!--app-html-->`, appHTML ?? '')
+      .replace(
+        `<!--app-data-->`,
+        `window.__HYDRATION_DATA__ = ${JSON.stringify(data)};`
+      );
 
-      res
-        .status(context.status || 200)
-        .set({ 'Content-Type': 'text/html' })
-        .send(html);
-    }
+    res.status(200).set({ 'Content-Type': 'text/html' }).send(html);
   } catch (e: unknown) {
     if (e instanceof Error) {
       const vite = getViteServer();

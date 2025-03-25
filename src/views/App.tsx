@@ -1,5 +1,5 @@
-import { Link, Redirect, Route, Switch } from 'react-router-dom';
-import { ServerSideProps, StaticContextType } from '@types';
+import { Link, Route, Routes } from 'react-router-dom';
+import { ServerSideProps } from '@types';
 
 interface HomeProps {
   user: { id: string; name: string } | undefined;
@@ -20,21 +20,10 @@ const About = () => {
 };
 
 const RedirectPage = () => {
-  const shouldRedirect = true; // Add your redirect condition here
-
-  if (shouldRedirect) {
-    return <Redirect to="/about" />;
-  }
-
   return <div>Redirect Page</div>;
 };
 
-interface NotFoundProps {
-  staticContext: StaticContextType;
-}
-
-const NotFound = ({ staticContext }: NotFoundProps) => {
-  if (staticContext) staticContext.status = 404;
+const NotFound = () => {
   return (
     <div>
       <h1>Sorry, can’t find that.</h1>
@@ -46,12 +35,13 @@ function App({ serverSideProps }: { serverSideProps: ServerSideProps }) {
   const { user } = serverSideProps;
 
   return (
-    <Switch>
-      <Route exact path="/" render={() => <Home user={user} />} />
-      <Route exact path="/about" component={About} />
-      <Route exact path="/redirect-test" component={RedirectPage} />
-      <Route component={NotFound} />
-    </Switch>
+    <Routes>
+      <Route path="/" element={<Home user={user} />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/redirect-test" element={<RedirectPage />} />
+      {/* Catch-all route for 404 pages */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 
