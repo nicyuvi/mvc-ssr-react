@@ -78,6 +78,12 @@ app.use('*all', async (req, res) => {
     } catch (error) {
       if (error instanceof Response && error.status === 301) {
         res.redirect(301, error.headers.get('Location') || '/');
+      } else if (error instanceof Response && error.status === 404) {
+        const responseBody = await error.text();
+        res
+          .status(error.status)
+          .set('Content-Type', error.headers.get('Content-Type') || 'text/html')
+          .send(responseBody);
       } else {
         res.status(500).send('Internal Server Error');
       }
