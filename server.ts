@@ -17,6 +17,10 @@ const app = express();
 // Add Vite and production middlewares
 await setupMiddlewares(app, IS_PRODUCTION);
 
+// TODO: : move this to constants to use in client and prerender on server
+// Define routes to prerender
+// const routes = ['/', '/about', '/posts'];
+
 // routes
 app.use('/posts', postsRouter);
 

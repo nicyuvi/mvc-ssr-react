@@ -33,9 +33,6 @@ Thumbs.db
 # Testing
 /coverage/
 
-# TypeScript declaration files
-*.d.ts
-
 # OS generated files
 *.swp
 *.swo

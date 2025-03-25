@@ -1,1 +1,5 @@
 @import 'tailwindcss';
+@theme {
+  /* extend custom theme */
+  /* https://tailwindcss.com/docs/adding-custom-styles */
+}
