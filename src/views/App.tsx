@@ -1,23 +1,15 @@
-import { Link, Route, Routes } from 'react-router-dom';
 import { ServerSideProps } from '@types';
+import { Route, Routes } from 'react-router-dom';
+import MainLayout from './components/layouts/MainLayout';
+import HomePage from './pages/HomePage';
+import { DashboardRoutes } from './pages/dashboard/routes';
 
-const Home = () => (
-  <div>
-    <h1 className="mt-2 mb-4 text-red-500">Home Page</h1>
-    <p>Home Page</p>
-    <Link to="/about">About</Link>
-  </div>
-);
+// TODO: Do something with this redirect logic
+// const RedirectPage = () => {
+//   throw new Response('', { status: 301, headers: { Location: '/about' } });
+// };
 
-const About = () => {
-  return <div>About Page</div>;
-};
-
-const RedirectPage = () => {
-  throw new Response('', { status: 301, headers: { Location: '/about' } });
-};
-
-// FIX: return JSX so page goes through app bundle (styling, components, etc)
+// FIX: return JSX so I can import. page goes through app bundle (styling, components, etc)
 // create client state with status codes and pass to server during render
 const NotFound = () => {
   const htmlContent = `
@@ -45,20 +37,22 @@ const NotFound = () => {
   });
 };
 
-function App({ serverSideProps }: { serverSideProps: ServerSideProps }) {
+export default function App({
+  serverSideProps,
+}: {
+  serverSideProps: ServerSideProps;
+}) {
   // NOTE: This should log initially on the server during prerender
   // and again on the client during hydration
   console.log('Server Side Props:', serverSideProps);
 
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/moved-permanently" element={<RedirectPage />} />
-      {/* Catch-all route for 404 pages */}
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={<HomePage />} />
+        <Route path="dashboard/*" element={<DashboardRoutes />} />
+      </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
-
-export default App;
