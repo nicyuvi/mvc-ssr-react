@@ -60,9 +60,8 @@ app.use('*all', async (req, res) => {
       throw new Error('Render function was not assigned');
     }
 
-    // fetch data
-    // todo: specify data shape
-    const data = { user: { id: 'foo', name: 'bar' } };
+    // NOTE: For global data if needed
+    const data = {};
 
     try {
       const { appHTML } = render(url, data);

@@ -1,12 +1,11 @@
-export interface ServerSideProps {
-  user?: { id: string; name: string };
-  posts?: { id: number; title: string }[];
-}
+export type GlobalData = Record<string, never>;
+
+export type ServerSideProps = GlobalData;
 
 // todo: specify data shape
 export type RenderFunctionType = (
   url: string,
-  data: Record<string, unknown>
+  data: GlobalData
 ) => {
   appHTML: string;
 };

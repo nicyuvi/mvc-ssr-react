@@ -1,16 +1,10 @@
 import { Link, Route, Routes } from 'react-router-dom';
 import { ServerSideProps } from '@types';
 
-interface HomeProps {
-  user: { id: string; name: string } | undefined;
-}
-
-const Home = ({ user }: HomeProps) => (
+const Home = () => (
   <div>
     <h1 className="mt-2 mb-4 text-red-500">Home Page</h1>
-    <p>server side props: </p>
-    <p>{user?.id}</p>
-    <p>{user?.name}</p>
+    <p>Home Page</p>
     <Link to="/about">About</Link>
   </div>
 );
@@ -52,11 +46,13 @@ const NotFound = () => {
 };
 
 function App({ serverSideProps }: { serverSideProps: ServerSideProps }) {
-  const { user } = serverSideProps;
+  // NOTE: This should log initially on the server during prerender
+  // and again on the client during hydration
+  console.log('Server Side Props:', serverSideProps);
 
   return (
     <Routes>
-      <Route path="/" element={<Home user={user} />} />
+      <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/moved-permanently" element={<RedirectPage />} />
       {/* Catch-all route for 404 pages */}
